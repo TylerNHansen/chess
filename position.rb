@@ -1,9 +1,9 @@
 require './chess.rb'
 
 class Position
-  attr_reader :row, :col
+  attr_accessor :row, :col
 
-  def initialize(input_string)
+  def initialize(input_string = "a1")
     @row, @col = self.parse(input_string)
     self
   end
@@ -14,6 +14,19 @@ class Position
 
   def == (other_pos)
     self.row == other_pos.row && self.col == other_pos.col
+  end
+
+  def next_pos(direction)
+    i, j = direction
+    new_by_row_col(self.row + i, self.col + j)
+  end
+
+  def new_by_row_col(row, col)
+    return nil unless row.between?(0,7) && col.between(0,7)
+    ans = Position.new
+    ans.row = row
+    ans.col = col
+    ans
   end
 
 
