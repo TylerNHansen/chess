@@ -23,7 +23,9 @@ class Board
   end
 
   def over?
-    false #implement later
+    return false if has_moves?(self.turn)
+    puts "GAME OVER"
+    true
   end
 
   def in_check?(player)
@@ -32,6 +34,19 @@ class Board
         piece.class == King
       end
     end
+  end
+
+  def checkmate?(player)
+    return false unless in_check?(player)
+    return false if has_moves?(player)
+    true
+  end
+
+  def has_moves?(player)
+    self.pieces.each do |piece|
+      return true if (piece.color == player && piece.legal_moves.any?)
+    end
+    false
   end
 
   def make_move(pos_start,pos_end)

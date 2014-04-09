@@ -14,9 +14,11 @@ class Game
   end
 
   def play
+
     until self.board.over?
       play_turn
     end
+    nil
   end
 
   # private
