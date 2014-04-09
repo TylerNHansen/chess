@@ -31,7 +31,7 @@ class Position
   end
 
   # def inspect
-  #
+  #   "POS at #{row}, #{col}"
   # end
 
 

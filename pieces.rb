@@ -34,9 +34,17 @@ class Piece
   end
 
   def threatened_pieces
-
+    # returns pieces of opponent's color that have a location in our valid moves
+    opp_pieces = self.board.pieces.select { |piece| piece.color != self.color }
+    moves = self.valid_moves
+    opp_pieces.select do |piece|
+      moves.include?(piece.location)
+    end
   end
 
+  # moves that are syntatically valid, not sliding through pieces, not occupied
+  # by own color, etc
+  # DOES NOT check if a puts you into check
   def valid_moves
     raise NotImplementedError
   end

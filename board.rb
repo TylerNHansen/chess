@@ -26,7 +26,13 @@ class Board
     false #implement later
   end
 
-
+  def in_check?(player)
+    pieces.select { |p| p.color != player }.any? do |starting_piece|
+      starting_piece.threatened_pieces.any? do |piece|
+        piece.class == King
+      end
+    end
+  end
 
   def make_move(pos_start,pos_end)
 
