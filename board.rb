@@ -1,6 +1,7 @@
-require './chess.rb'
+# encoding: utf-8
+# require './chess.rb'
+require 'colorize'
 require 'debugger'
-
 class Board
   attr_accessor :pieces, :turn
 
@@ -13,6 +14,29 @@ class Board
     .concat(['a7','b7','c7','d7','e7','f7','g7','h7',].map { |pos| [pos, 'black'] }),
     :r => [['a1','white'],['h1', 'white'],['a8','black'],['h8','black']]
   }
+
+  WHITE_DISP_COLOR = :white
+  BLACK_DISP_COLOR = :black
+  WHITE_SQ_COLOR = :red
+  BLACK_SQ_COLOR = :green
+  CHESS_SYMBS = Hash.new('  ').merge(
+  Hash[
+    'p' => "\u265F ".encode('utf-8').colorize(BLACK_DISP_COLOR),
+    'r' => "\u265C ".encode('utf-8').colorize(BLACK_DISP_COLOR),
+    'b' => "\u265D ".encode('utf-8').colorize(BLACK_DISP_COLOR),
+    'n' => "\u265E ".encode('utf-8').colorize(BLACK_DISP_COLOR),
+    'k' => "\u265A ".encode('utf-8').colorize(BLACK_DISP_COLOR),
+    'q' => "\u265B ".encode('utf-8').colorize(BLACK_DISP_COLOR),
+    'P' => "\u2659 ".encode('utf-8').colorize(WHITE_DISP_COLOR),
+    'R' => "\u2656 ".encode('utf-8').colorize(WHITE_DISP_COLOR),
+    'B' => "\u2657 ".encode('utf-8').colorize(WHITE_DISP_COLOR),
+    'N' => "\u2658 ".encode('utf-8').colorize(WHITE_DISP_COLOR),
+    'K' => "\u2654 ".encode('utf-8').colorize(WHITE_DISP_COLOR),
+    'Q' => "\u2655 ".encode('utf-8').colorize(WHITE_DISP_COLOR)
+    ] )
+
+
+
 
   def initialize(make_blank = false)
     return self if make_blank
@@ -88,8 +112,23 @@ class Board
       index = row * 9 + col
       disp_board[index] = piece.disp_str
     end
-    puts disp_board
+    colorize_board(disp_board)
     true
+  end
+
+  def colorize_board(input_board)
+    colorized_board = ""
+    current_color = WHITE_SQ_COLOR
+    to_color = input_board.split('')
+    until to_color.empty?
+      current_square = to_color.shift
+      if current_square == "\n"
+        puts
+      else
+        print CHESS_SYMBS[current_square].colorize( :background => current_color)
+      end
+      current_color =  (current_color == WHITE_SQ_COLOR ? BLACK_SQ_COLOR : WHITE_SQ_COLOR)
+    end
   end
 
   def deep_dup

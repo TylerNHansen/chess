@@ -1,4 +1,5 @@
-require './chess.rb'
+# encoding: utf-8
+# require './chess.rb'
 require 'debugger'
 
 class Piece

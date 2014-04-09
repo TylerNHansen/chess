@@ -1,7 +1,9 @@
+# encoding: utf-8
 load './board.rb'
 load './pieces.rb'
 load './position.rb'
 load './player.rb'
+require 'colorize'
 require 'debugger'
 
 class Game
@@ -9,14 +11,14 @@ class Game
 
   def initialize
     @board = Board.new
-    @white = Player.new("player 1")
-    @black = Player.new("player 2")
+    @white = Player.new("Player One")
+    @black = Player.new("Player Two")
   end
 
   def play
-
-    until self.board.over?
+    loop do
       play_turn
+      return nil if self.board.over?
     end
     nil
   end
@@ -27,7 +29,7 @@ class Game
     #asks current player for a move
 
     begin
-      if self.board.turn == white
+      if self.board.turn == "white"
         start_pos, end_pos = white.get_move(self.board)
       else
         start_pos, end_pos = black.get_move(self.board)
@@ -62,5 +64,5 @@ class String
   end
 end
 
-game = Game.new
-game.play
+Game.new.play
+nil
