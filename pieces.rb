@@ -50,6 +50,15 @@ class Piece
     self.class
   end
 
+  def has_opp_piece?(pos)
+    return false if self.board.empty?(pos)
+    return false if self.board.has_piece?(pos, self.color)
+    true
+  end
+
+  # I think there's room for moving some methods from the subclasses up to
+  # the class for all pieces, saving it for a refactor later though
+
 end
 
 class SlidingPiece < Piece
@@ -166,19 +175,31 @@ class Pawn < Piece
   end
 
   def valid_moves
+    #can capture diagonally
     valid_locs = []
     next_pos = self.front_pos
     valid_locs << next_pos if self.board.empty?(next_pos)
-    if (self.color == 'white' ? self.location.row == 2 : self.location.row == 7)
+    if (self.color == 'white' ? self.location.row == 6 : self.location.row == 1)
       other_pos = self.front_pos(2)
-      valid_locs << next_pos if self.board.empty?(other_pos)
+      valid_locs << other_pos if self.board.empty?(other_pos)
     end
+
+    valid_locs += capture_positions
     valid_locs
   end
 
   def front_pos(dist = 1)
     self.color == 'white' ? self.location.next_pos([-dist,0]) :
                             self.location.next_pos([dist,0])
+  end
+
+  def capture_positions
+    right_pos = self.front_pos.next_pos([0,1])
+    left_pos = self.front_pos.next_pos([0,-1])
+    captures = []
+    captures << right_pos if self.has_opp_piece?(right_pos)
+    captures << left_pos if self.has_opp_piece?(left_pos)
+    captures
   end
 
 end

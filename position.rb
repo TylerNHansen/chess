@@ -30,6 +30,10 @@ class Position
     ans
   end
 
+  # def inspect
+  #
+  # end
+
 
   protected
 
