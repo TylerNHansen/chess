@@ -66,4 +66,14 @@ describe "Position#initialize" do
 
 end
 
+describe "Game " do
 
+  it "initializes successfully with board, white, black" do
+    game = Game.new
+    expect(game.board.nil?).to eq(false)
+    expect(game.board.pieces.size).to eq(32)
+    expect(game.white.nil?).to eq(false)
+    expect(game.black.nil?).to eq(false)
+  end
+
+end

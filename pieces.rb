@@ -2,12 +2,14 @@ require './chess.rb'
 
 class Piece
   attr_reader :location, :color, :board
+  attr_writer :location
 
   def initialize(location, color, board)
     @location, @color, @board = Position.new(location), color, board
   end
 
   def row_col
+    @location = @location.force_pos
     [self.location.row, self.location.col]
   end
 
@@ -17,8 +19,11 @@ class Piece
   end
 
   def move(pos)
-    #raises error if can't move there
-    raise NotImplementedError
+    #check if target is a valid move
+    # throw and error if it isn't
+    # if it's valid, set our position to that square
+    self.valid_moves.include?(pos)
+    self.location = pos
   end
 
   def capture(pos)
@@ -33,6 +38,12 @@ class Piece
   def valid_captures
     raise NotImplementedError
   end
+
+  def inspect
+    #overwrite to avoid loops
+    self.class
+  end
+
 end
 
 class SlidingPiece < Piece
@@ -55,6 +66,7 @@ class SlidingPiece < Piece
         valid_locs << next_in_dir
       end
     end
+    valid_locs
   end
 
 end
@@ -79,6 +91,7 @@ class Bishop < SlidingPiece
 
   def directions
     [[1,1][1,-1][-1,1],[-1,-1]]
+  end
 end
 
 class Rook < SlidingPiece
@@ -103,9 +116,11 @@ class SteppingPiece < Piece
       next if next_in_dir.nil?
       next unless board.empty?(next_in_dir)
       valid_locs << next_in_dir
-      end
     end
+    valid_locs
   end
+
+
 
 end
 
@@ -144,15 +159,15 @@ class Pawn < Piece
     next_pos = self.front_pos
     valid_locs << next_pos if self.board.empty?(next_pos)
     if (self.color == 'white' ? self.location.row == 2 : self.location.row == 7)
-      next_pos = self.front_pos(2)
-      valid_locs << next_pos if self.board.empty?(next_pos)
+      other_pos = self.front_pos(2)
+      valid_locs << next_pos if self.board.empty?(other_pos)
     end
     valid_locs
   end
 
   def front_pos(dist = 1)
-    self.color == 'white' ? [self.location.next_pos([dist,0])] :
-                            [self.location.next_pos([-dist,0])]
+    self.color == 'white' ? self.location.next_pos([-dist,0]) :
+                            self.location.next_pos([dist,0])
   end
 
 end

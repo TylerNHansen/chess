@@ -13,6 +13,7 @@ class Position
   end
 
   def == (other_pos)
+    other_pos = other_pos.force_pos
     self.row == other_pos.row && self.col == other_pos.col
   end
 
@@ -22,7 +23,7 @@ class Position
   end
 
   def new_by_row_col(row, col)
-    return nil unless row.between?(0,7) && col.between(0,7)
+    return nil unless row.between?(0,7) && col.between?(0,7)
     ans = Position.new
     ans.row = row
     ans.col = col

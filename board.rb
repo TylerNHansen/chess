@@ -1,4 +1,5 @@
 require './chess.rb'
+require 'debugger'
 
 class Board
   attr_accessor :pieces, :turn
@@ -21,11 +22,30 @@ class Board
     self
   end
 
+  def over?
+    false #implement later
+  end
+
 
 
   def make_move(pos_start,pos_end)
-    #throws error if move is invalid
-    #moves piece from start to end if it is valid
+
+    # pos_start = pos_start.force_pos
+    # pos_end = pos_end.force_pos
+
+    unless has_piece?(pos_start, turn)
+      raise InvalidMoveError # "You do not have a piece there."
+    end
+
+    moving_piece = piece_at(pos_start)
+    if moving_piece.valid_moves.include?(pos_end)
+      moving_piece.move(pos_end)
+    else
+      raise InvalidMoveError # "That is not a valid move"
+    end
+
+    self.turn == "white" ? self.turn = "black" : self.turn = "white"
+    nil
   end
 
   def render
@@ -65,6 +85,12 @@ class Board
   end
 
   protected
+
+  def piece_at(pos)
+    pos = pos.force_pos
+    raise InvalidMoveError "No piece there!" if self.empty?(pos)
+    pieces.select{ |piece| piece.location == pos}.first
+  end
 
   def populate_board
     STARTING_BOARD[:n].each do |pos_str,color|
