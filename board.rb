@@ -38,8 +38,9 @@ class Board
     end
 
     moving_piece = piece_at(pos_start)
-    debugger
     if moving_piece.valid_moves.include?(pos_end)
+      #remove piece of other color at pos_end
+      self.pieces.delete_if {|piece| piece.location == pos_end}
       moving_piece.move(pos_end)
     else
       raise InvalidMoveError # "That is not a valid move"
@@ -82,6 +83,7 @@ class Board
   end
 
   def has_piece?(pos, color)
+    return false if pos.nil?
     pos = pos.force_pos
 
     pieces.any? { |piece| piece.location == pos && piece.color == color }

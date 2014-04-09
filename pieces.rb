@@ -33,6 +33,10 @@ class Piece
     raise NotImplementedError
   end
 
+  def threatened_pieces
+
+  end
+
   def valid_moves
     raise NotImplementedError
   end
@@ -64,9 +68,12 @@ class SlidingPiece < Piece
     self.directions.each do |direction|
       current_pos = self.location.next_pos(direction)
       loop do
-        break unless board.empty?(current_pos)
+        #instead of checking for empty, check if position has piece of
+        #current piece's color
+        break if board.has_piece?(current_pos, self.color)
         break if current_pos.nil?
         valid_locs << current_pos
+        break unless board.empty?(current_pos) #has piece of the other color
         current_pos = current_pos.next_pos(direction)
       end
     end
@@ -116,10 +123,10 @@ class SteppingPiece < Piece
   def valid_moves
     valid_locs = []
     self.directions.each do |direction|
-      next_in_dir = self.location.next_pos(direction)
-      next if next_in_dir.nil?
-      next unless board.empty?(next_in_dir)
-      valid_locs << next_in_dir
+      trial_pos = self.location.next_pos(direction)
+      next if trial_pos.nil?
+      next if board.has_piece?(trial_pos, self.color)
+      valid_locs << trial_pos
     end
     valid_locs
   end
