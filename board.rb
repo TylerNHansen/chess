@@ -38,6 +38,7 @@ class Board
     end
 
     moving_piece = piece_at(pos_start)
+    debugger
     if moving_piece.valid_moves.include?(pos_end)
       moving_piece.move(pos_end)
     else
@@ -64,6 +65,7 @@ class Board
   end
 
   def deep_dup
+    #copied pieces need to refer to copied board
     pieces_copy = pieces.map { |piece| piece.dup }
     turn_copy = self.turn.dup
     board_copy = Board.new(true)
@@ -73,6 +75,7 @@ class Board
   end
 
   def empty?(pos)
+    return false if pos.nil?
     pos = pos.force_pos
 
     pieces.none? { |piece| piece.location == pos}
@@ -89,6 +92,7 @@ class Board
   def piece_at(pos)
     pos = pos.force_pos
     raise InvalidMoveError "No piece there!" if self.empty?(pos)
+    #find would work here
     pieces.select{ |piece| piece.location == pos}.first
   end
 

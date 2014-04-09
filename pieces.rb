@@ -1,4 +1,5 @@
 require './chess.rb'
+require 'debugger'
 
 class Piece
   attr_reader :location, :color, :board
@@ -22,7 +23,8 @@ class Piece
     #check if target is a valid move
     # throw and error if it isn't
     # if it's valid, set our position to that square
-    self.valid_moves.include?(pos)
+    #self.valid_moves.include?(pos)
+    pos = pos.force_pos
     self.location = pos
   end
 
@@ -58,12 +60,14 @@ class SlidingPiece < Piece
 
   def valid_moves
     valid_locs = []
+
     self.directions.each do |direction|
+      current_pos = self.location.next_pos(direction)
       loop do
-        next_in_dir = self.location.next_pos(direction)
-        break if next_in_dir.nil?
-        break unless board.empty?(next_in_dir)
-        valid_locs << next_in_dir
+        break unless board.empty?(current_pos)
+        break if current_pos.nil?
+        valid_locs << current_pos
+        current_pos = current_pos.next_pos(direction)
       end
     end
     valid_locs
@@ -78,7 +82,7 @@ class Queen < SlidingPiece
   end
 
   def directions
-    [[0,1],[0,-1],[1,0],[-1,0],[1,1][1,-1][-1,1],[-1,-1]]
+    [[0,1], [0,-1], [1,0], [-1,0], [1,1], [1,-1], [-1,1], [-1,-1]]
   end
 
 end
@@ -90,7 +94,7 @@ class Bishop < SlidingPiece
   end
 
   def directions
-    [[1,1][1,-1][-1,1],[-1,-1]]
+    [[1,1], [1,-1], [-1,1], [-1,-1]]
   end
 end
 
@@ -101,7 +105,7 @@ class Rook < SlidingPiece
   end
 
   def directions
-    [[0,1],[0,-1],[1,0],[-1,0]]
+    [[0,1], [0,-1], [1,0], [-1,0]]
   end
 
 end
@@ -131,7 +135,7 @@ class Knight < SteppingPiece
   end
 
   def directions
-    [[2, 1], [-2, 1],[2, -1], [-2, -1], [1, 2], [-1, 2], [1, -2], [-1, -2]]
+    [[2, 1], [-2, 1], [2, -1], [-2, -1], [1, 2], [-1, 2], [1, -2], [-1, -2]]
   end
 
 end
@@ -143,7 +147,7 @@ class King < SteppingPiece
   end
 
   def directions
-    [[0,1],[0,-1],[1,0],[-1,0],[1,1][1,-1][-1,1],[-1,-1]]
+    [[0,1], [0,-1], [1,0], [-1,0], [1,1], [1,-1,], [-1,1], [-1,-1]]
   end
 
 end
