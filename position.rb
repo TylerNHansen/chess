@@ -38,6 +38,7 @@ class Position
   protected
 
   def parse(string)
+    return string.row, string.col if string.class == Position
     #throw error if first char isn't a-h, second isn't 1-8
     unless string.size == 2
       raise InvalidInputError, 'Invalid input length'

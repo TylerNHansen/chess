@@ -16,7 +16,6 @@ class Game
   def play
     until self.board.over?
       play_turn
-      debugger
     end
   end
 

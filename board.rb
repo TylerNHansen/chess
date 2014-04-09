@@ -44,7 +44,7 @@ class Board
     end
 
     moving_piece = piece_at(pos_start)
-    if moving_piece.valid_moves.include?(pos_end)
+    if moving_piece.legal_moves.include?(pos_end)
       #remove piece of other color at pos_end
       self.pieces.delete_if {|piece| piece.location == pos_end}
       moving_piece.move(pos_end)
@@ -54,6 +54,12 @@ class Board
 
     self.turn == "white" ? self.turn = "black" : self.turn = "white"
     nil
+  end
+
+  # MOVES WITHOUT CHECKING IF IT'S VALID OR NOT
+  def move(pos_start, pos_end)
+    self.piece_at(pos_start).move(pos_end)
+    self
   end
 
   def render
@@ -72,12 +78,10 @@ class Board
   end
 
   def deep_dup
-    #copied pieces need to refer to copied board
-    pieces_copy = pieces.map { |piece| piece.dup }
-    turn_copy = self.turn.dup
     board_copy = Board.new(true)
-    board_copy.pieces = pieces_copy
-    board_copy.turn = turn_copy
+
+    board_copy.pieces = self.pieces.map { |piece| piece.dup(board_copy) }
+    board_copy.turn = self.turn.dup
     board_copy
   end
 

@@ -9,6 +9,10 @@ class Piece
     @location, @color, @board = Position.new(location), color, board
   end
 
+  def dup(board)
+    self.class.new(self.location, self.color, board)
+  end
+
   def row_col
     @location = @location.force_pos
     [self.location.row, self.location.col]
@@ -47,6 +51,14 @@ class Piece
   # DOES NOT check if a puts you into check
   def valid_moves
     raise NotImplementedError
+  end
+
+  def legal_moves
+    valid_positions = self.valid_moves
+    #for each valid move, check if it puts you in check
+    valid_positions.reject do |target|
+      self.board.deep_dup.move(self.location, target).in_check?(self.color)
+    end
   end
 
   def valid_captures
@@ -193,7 +205,7 @@ class Pawn < Piece
     end
 
     valid_locs += capture_positions
-    valid_locs
+    valid_locs.compact
   end
 
   def front_pos(dist = 1)
