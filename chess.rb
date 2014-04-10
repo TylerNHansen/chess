@@ -3,8 +3,10 @@ load './board.rb'
 load './pieces.rb'
 load './position.rb'
 load './player.rb'
+load './stepping_pieces.rb'
+load './sliding_pieces.rb'
+load './pawn.rb'
 require 'colorize'
-require 'debugger'
 
 class Game
   attr_reader :board, :white, :black
@@ -18,15 +20,15 @@ class Game
   def play
     loop do
       play_turn
-      return nil if self.board.over?
+      break if self.board.over?
     end
+    self.board.render
     nil
   end
 
-  # private
+  private
 
   def play_turn
-    #asks current player for a move
 
     begin
       if self.board.turn == "white"
@@ -44,10 +46,6 @@ class Game
       puts "Invalid Input: input not expected"
       retry
     end
-
-
-    #tells board to make that move
-    #catches error and retries if move isn't legal
   end
 
 end

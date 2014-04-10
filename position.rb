@@ -1,5 +1,4 @@
 # encoding: utf-8
-# require './chess.rb'
 
 class Position
   attr_accessor :row, :col
@@ -31,11 +30,6 @@ class Position
     ans
   end
 
-  # def inspect
-  #   "POS at #{row}, #{col}"
-  # end
-
-
   protected
 
   def parse(string)
@@ -49,10 +43,8 @@ class Position
       raise InvalidInputError, 'Not a valid chess board position'
     end
 
-
     row = 8 - (string[1].to_i)
     col = string[0].ord - 'a'.ord
     [row,col]
   end
-
 end

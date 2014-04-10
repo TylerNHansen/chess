@@ -1,7 +1,7 @@
 # encoding: utf-8
-# require './chess.rb'
+
 require 'colorize'
-require 'debugger'
+
 class Board
   attr_accessor :pieces, :turn
 
@@ -34,9 +34,6 @@ class Board
     'K' => "\u2654 ".encode('utf-8').colorize(WHITE_DISP_COLOR),
     'Q' => "\u2655 ".encode('utf-8').colorize(WHITE_DISP_COLOR)
     ] )
-
-
-
 
   def initialize(make_blank = false)
     return self if make_blank
@@ -84,8 +81,6 @@ class Board
 
     moving_piece = piece_at(pos_start)
     if moving_piece.legal_moves.include?(pos_end)
-      #remove piece of other color at pos_end
-      self.pieces.delete_if {|piece| piece.location == pos_end}
       moving_piece.move(pos_end)
     else
       raise InvalidMoveError # "That is not a valid move"
@@ -97,14 +92,12 @@ class Board
 
   # MOVES WITHOUT CHECKING IF IT'S VALID OR NOT
   def move(pos_start, pos_end)
+    self.pieces.delete_if {|piece| piece.location == pos_end}
     self.piece_at(pos_start).move(pos_end)
     self
   end
 
   def render
-    #shows the board
-    #create what empty board looks like
-    #for each piece, replace char at location with display string
     puts
     disp_board = "        \n" * 8
     pieces.each do |piece|
@@ -114,21 +107,6 @@ class Board
     end
     colorize_board(disp_board)
     true
-  end
-
-  def colorize_board(input_board)
-    colorized_board = ""
-    current_color = WHITE_SQ_COLOR
-    to_color = input_board.split('')
-    until to_color.empty?
-      current_square = to_color.shift
-      if current_square == "\n"
-        puts
-      else
-        print CHESS_SYMBS[current_square].colorize( :background => current_color)
-      end
-      current_color =  (current_color == WHITE_SQ_COLOR ? BLACK_SQ_COLOR : WHITE_SQ_COLOR)
-    end
   end
 
   def deep_dup
@@ -154,6 +132,21 @@ class Board
   end
 
   protected
+
+  def colorize_board(input_board)
+    colorized_board = ""
+    current_color = WHITE_SQ_COLOR
+    to_color = input_board.split('')
+    until to_color.empty?
+      current_square = to_color.shift
+      if current_square == "\n"
+        puts
+      else
+        print CHESS_SYMBS[current_square].colorize( :background => current_color)
+      end
+      current_color =  (current_color == WHITE_SQ_COLOR ? BLACK_SQ_COLOR : WHITE_SQ_COLOR)
+    end
+  end
 
   def piece_at(pos)
     pos = pos.force_pos
