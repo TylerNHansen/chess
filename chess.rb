@@ -62,5 +62,7 @@ class String
   end
 end
 
-Game.new.play
-nil
+if __FILE__ == $PROGRAM_NAME
+  Game.new.play
+  nil
+end
